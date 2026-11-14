@@ -571,8 +571,8 @@
     .g-body .slots { gap: 6px; }
     .g-body .slots .chip { padding: 6px 7px 5px; font-size: 14px; }
   }
-  /* Short, wide screens (a phone on its side, a small laptop window): the text box moves to the right */
-  @media (max-height: 519px) and (orientation: landscape), (max-height: 759px) and (min-width: 1000px) {
+  /* A phone on its side is very short: the text box moves to the right so the scene stays visible */
+  @media (max-height: 519px) and (orientation: landscape) {
     .g-dialog {
       left: auto;
       right: max(var(--gutter), env(safe-area-inset-right));
@@ -585,9 +585,6 @@
     }
     .title.g-title { right: 50%; top: 10%; font-size: 32px; }
     .g-top { right: 50%; }
-  }
-  @media (min-height: 520px) and (max-height: 759px) and (min-width: 1000px) {
-    .title.g-title { font-size: 48px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1332,7 +1329,7 @@
       cv.style.width = W * scale + 'px';
       cv.style.height = H * scale + 'px';
       /* keep these in step with the .g-dialog rules in the stylesheet */
-      var side = (vh < 520 && vw > vh) || (vh < 760 && vw >= 1000);
+      var side = vh < 520 && vw > vh;
       var frac = vw < 720 && vh >= vw ? .56 : .46;
       cx = side ? Math.round(W * .26) : (W >> 1);
       roadY = Math.round((side ? vh * .74 : vh - 16 - vh * frac - 26) / scale);
