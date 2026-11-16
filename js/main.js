@@ -50,7 +50,7 @@
 
     /* K: rows between horizon and road. D0: road's distance from the camera. */
     var K = 56, D0 = 160, DNEAR = 24, DFAR = 420, PAD = 1100, SPAD = 320, MPAD = 320;
-    var WORLD = 2640, SPAWN = 120, SEA0 = 730, SEA1 = 1170, FLY0 = 650, FLY1 = 1250;
+    var WORLD = 2860, SPAWN = 120, SEA0 = 730, SEA1 = 1170, FLY0 = 650, FLY1 = 1250;
     var LANES = { mid: .5, build: .8, curb: .9, fore: 1.6, near: 2.4 };
     var LIT = '#FCFCFC', HOT = '#F83800';
     var STOPS = [
@@ -60,8 +60,9 @@
       { id: 'p1',      x: 1660, label: 'Main quest', name: 'FitnessCoach' },
       { id: 'p2',      x: 1880, label: 'Quest 2',    name: 'Property marketplace' },
       { id: 'p3',      x: 2100, label: 'Quest 3',    name: 'Secure admin dashboard' },
-      { id: 'skills',  x: 2320, label: 'Inventory',  name: 'Skills' },
-      { id: 'contact', x: 2520, label: 'Faroz',      name: 'Contact' }
+      { id: 'p4',      x: 2320, label: 'Quest 4',    name: 'Hidayah' },
+      { id: 'skills',  x: 2540, label: 'Inventory',  name: 'Skills' },
+      { id: 'contact', x: 2740, label: 'Faroz',      name: 'Contact' }
     ];
 
     /* Day and night are palette swaps, the way 8-bit games did it. */
@@ -301,6 +302,21 @@
       });
 
       /* Skills: an item shop */
+      /* Hidayah: a game hall whose front window is a screen showing a tiny RPG scene */
+      S.arcade = mk(104, 76, function (g) {
+        var i;
+        R(g, 26, 15, 2, 6, P.k); R(g, 76, 15, 2, 6, P.k);
+        sign(g, 'HIDAYAH', 52, 3, LIT, '#000');
+        B(g, 4, 20, 96, 6, P.blue);
+        B(g, 6, 25, 92, 51, P.cream);
+        B(g, 11, 31, 54, 34, P.k);
+        R(g, 13, 33, 50, 30, P.green);
+        R(g, 13, 53, 50, 5, P.gold);
+        for (i = 0; i < 3; i++) { R(g, 16 + i * 7, 36, 2, 1, HOT); R(g, 19 + i * 7, 36, 2, 1, HOT); R(g, 16 + i * 7, 37, 5, 2, HOT); R(g, 17 + i * 7, 39, 3, 1, HOT); R(g, 18 + i * 7, 40, 1, 1, HOT); }
+        R(g, 27, 45, 4, 3, P.k); R(g, 27, 48, 4, 4, HOT); R(g, 27, 52, 1, 3, P.blue); R(g, 30, 52, 1, 3, P.blue);
+        R(g, 44, 47, 10, 7, P.k); R(g, 45, 48, 4, 5, LIT); R(g, 50, 48, 3, 5, LIT);
+        B(g, 72, 44, 22, 32, P.wood); B(g, 76, 48, 14, 10, P.glass); R(g, 90, 62, 2, 2, P.gold);
+      });
       S.shop = mk(98, 74, function (g) {
         var i;
         R(g, 24, 15, 2, 6, P.k); R(g, 72, 15, 2, 6, P.k);
@@ -406,17 +422,17 @@
       items = [];
       function put(lane, wx, img, oy) { items.push({ f: LANES[lane], b: Math.round(K * LANES[lane]), x: wx, img: img, oy: oy || 0 }); }
       put('build', 230, S.home); put('build', 480, S.esa); put('build', 1420, S.nxu); put('build', 1660, S.gym);
-      put('build', 1880, S.house); put('build', 2100, S.fort); put('build', 2320, S.shop); put('build', 2520, S.post);
+      put('build', 1880, S.house); put('build', 2100, S.fort); put('build', 2320, S.arcade); put('build', 2540, S.shop); put('build', 2740, S.post);
       [40, 350, 605].forEach(function (q) { put('build', q, S.palm); });
-      [1300, 1540, 1772, 1990, 2212, 2424, 2616].forEach(function (q, n) { put('build', q, n % 3 === 1 ? S.treeG : S.treeA); });
+      [1300, 1540, 1772, 1990, 2212, 2432, 2644, 2836].forEach(function (q, n) { put('build', q, n % 3 === 1 ? S.treeG : S.treeA); });
       [-420, -300, -170, -60, 60, 150, 300, 410, 560, 660].forEach(function (q) { put('mid', q, S.palm); });
-      for (i = 0; i < 20; i++) put('mid', 1230 + i * 112, i % 2 ? S.treeA : S.treeG);
+      for (i = 0; i < 22; i++) put('mid', 1230 + i * 112, i % 2 ? S.treeA : S.treeG);
       put('mid', 940, S.boat, 4);
       put('curb', 70, S.sJkt); put('curb', 596, S.sAir); put('curb', 1306, S.sNkg);
-      [160, 345, 560, 1500, 1730, 1950, 2170, 2390, 2590].forEach(function (q) { put('curb', q, S.lamp); });
-      put('curb', 1938, S.sSale); put('curb', 2474, S.mail);
-      [10, 170, 380, 575, 1265, 1540, 1770, 1990, 2210, 2420, 2610].forEach(function (q) { put('fore', q, S.bush); });
-      [-80, 90, 300, 520, 1350, 1600, 1850, 2080, 2300, 2540, 2700].forEach(function (q) { put('near', q, S.tuft); });
+      [160, 345, 560, 1500, 1730, 1950, 2170, 2400, 2620, 2810].forEach(function (q) { put('curb', q, S.lamp); });
+      put('curb', 1938, S.sSale); put('curb', 2694, S.mail);
+      [10, 170, 380, 575, 1265, 1540, 1770, 1990, 2210, 2432, 2640, 2830].forEach(function (q) { put('fore', q, S.bush); });
+      [-80, 90, 300, 520, 1350, 1600, 1850, 2080, 2300, 2520, 2700, 2920].forEach(function (q) { put('near', q, S.tuft); });
       items.sort(function (a, b) { return a.f - b.f; });
 
       /* Ground seen from above: across = position along the road, down = distance from the camera. */
