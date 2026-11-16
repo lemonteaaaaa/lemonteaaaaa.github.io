@@ -54,15 +54,15 @@
     var LANES = { mid: .5, build: .8, curb: .9, fore: 1.6, near: 2.4 };
     var LIT = '#FCFCFC', HOT = '#F83800';
     var STOPS = [
-      { id: 'about',   x: 230,  label: 'Faroz',      name: 'About' },
-      { id: 'edu1',    x: 480,  label: 'Education',  name: 'Stage 1, Universitas Esa Unggul' },
-      { id: 'edu2',    x: 1420, label: 'Education',  name: 'Stage 2, Nanjing Xiaozhuang University' },
-      { id: 'p1',      x: 1660, label: 'Main quest', name: 'FitnessCoach' },
-      { id: 'p2',      x: 1880, label: 'Quest 2',    name: 'Property marketplace' },
-      { id: 'p3',      x: 2100, label: 'Quest 3',    name: 'Secure admin dashboard' },
-      { id: 'p4',      x: 2320, label: 'Quest 4',    name: 'Hidayah' },
-      { id: 'skills',  x: 2540, label: 'Inventory',  name: 'Skills' },
-      { id: 'contact', x: 2740, label: 'Faroz',      name: 'Contact' }
+      { id: 'about', art: 'home',   x: 230,  label: 'Faroz',      name: 'About' },
+      { id: 'edu1', art: 'esa',    x: 480,  label: 'Education',  name: 'Stage 1, Universitas Esa Unggul' },
+      { id: 'edu2', art: 'nxu',    x: 1420, label: 'Education',  name: 'Stage 2, Nanjing Xiaozhuang University' },
+      { id: 'p1', art: 'gym',      x: 1660, label: 'Main quest', name: 'FitnessCoach' },
+      { id: 'p2', art: 'house',      x: 1880, label: 'Quest 2',    name: 'Property marketplace' },
+      { id: 'p3', art: 'fort',      x: 2100, label: 'Quest 3',    name: 'Secure admin dashboard' },
+      { id: 'p4', art: 'arcade',      x: 2320, label: 'Quest 4',    name: 'Hidayah' },
+      { id: 'skills', art: 'shop',  x: 2540, label: 'Inventory',  name: 'Skills' },
+      { id: 'contact', art: 'post', x: 2740, label: 'Faroz',      name: 'Contact' }
     ];
 
     /* Day and night are palette swaps, the way 8-bit games did it. */
@@ -188,6 +188,21 @@
       S.w2 = PM(head.concat(armA, hips, legs2), cp);
       S.idleL = flip(S.idle); S.w1L = flip(S.w1); S.w2L = flip(S.w2);
 
+      S.mark = mk(9, 9, function (g) {
+        rects(g, [[0, 0, 9, 3], [1, 3, 7, 2], [2, 5, 5, 2], [3, 7, 3, 1], [4, 8, 1, 1]], '#000');
+        rects(g, [[1, 1, 7, 1], [2, 2, 5, 2], [3, 4, 3, 2], [4, 6, 1, 1]], P.gold);
+      });
+      S.bird1 = mk(7, 3, function (g) { rects(g, [[0, 0, 2, 1], [2, 1, 1, 1], [3, 2, 1, 1], [4, 1, 1, 1], [5, 0, 2, 1]], P.k); });
+      S.bird2 = mk(7, 3, function (g) { rects(g, [[0, 2, 2, 1], [2, 1, 3, 1], [5, 2, 2, 1]], P.k); });
+      S.puff = mk(6, 5, function (g) { rects(g, [[1, 0, 4, 5], [0, 1, 6, 3]], P.cloud); R(g, 1, 4, 4, 1, P.cloudS); });
+      S.puffS = mk(4, 3, function (g) { rects(g, [[1, 0, 2, 3], [0, 1, 4, 1]], P.cloud); });
+      /* night only: a dithered pool of light around each lamp */
+      S.glow = mk(30, 30, function (g) {
+        for (var gy = 0; gy < 30; gy++) for (var gx = 0; gx < 30; gx++) {
+          var dd = (gx - 14.5) * (gx - 14.5) + (gy - 14.5) * (gy - 14.5);
+          if (dd < 60 ? (gx + gy) % 2 === 0 : (dd < 150 ? gx % 2 === 0 && gy % 2 === 0 : (dd < 215 && gx % 4 === 0 && gy % 4 === 0))) R(g, gx, gy, 1, 1, P.lamp);
+        }
+      });
       S.bang = mk(9, 13, function (g) {
         R(g, 0, 0, 9, 10, '#000'); R(g, 1, 1, 7, 8, LIT);
         R(g, 3, 10, 3, 1, '#000'); R(g, 4, 11, 1, 1, '#000'); R(g, 4, 9, 1, 2, LIT);
@@ -222,9 +237,11 @@
       });
 
       /* Stage 1: campus in Jakarta, with the Indonesian flag */
-      S.esa = mk(112, 80, function (g) {
+      function esa(wave) { return mk(112, 80, function (g) {
         var xs = [9, 23, 37, 65, 79, 93], i;
-        R(g, 55, 1, 1, 18, P.k); B(g, 56, 1, 13, 8, LIT); R(g, 57, 2, 11, 3, HOT);
+        R(g, 55, 1, 1, 18, P.k);
+        if (wave) { B(g, 56, 1, 7, 8, LIT); B(g, 62, 2, 7, 8, LIT); R(g, 57, 2, 6, 3, HOT); R(g, 63, 3, 5, 3, HOT); R(g, 62, 5, 1, 3, LIT); }
+        else { B(g, 56, 1, 13, 8, LIT); R(g, 57, 2, 11, 3, HOT); }
         B(g, 2, 18, 108, 7, P.blue);
         B(g, 4, 24, 104, 56, P.white);
         sign(g, 'ESA UNGGUL', 56, 28, P.blue, LIT);
@@ -232,7 +249,8 @@
         B(g, 46, 54, 20, 5, P.blue);
         B(g, 49, 58, 14, 22, P.glass); R(g, 55, 59, 2, 20, P.k); R(g, 50, 59, 5, 1, P.glassL); R(g, 57, 59, 5, 1, P.glassL);
         R(g, 44, 78, 24, 2, P.stoneD);
-      });
+      }); }
+      S.esa = esa(0); S.esa2 = esa(1);
 
       /* Stage 2: a gate building with a tiled roof in Nanjing */
       S.nxu = mk(116, 84, function (g) {
@@ -429,7 +447,7 @@
       for (i = 0; i < 22; i++) put('mid', 1230 + i * 112, i % 2 ? S.treeA : S.treeG);
       put('mid', 940, S.boat, 4);
       put('curb', 70, S.sJkt); put('curb', 596, S.sAir); put('curb', 1306, S.sNkg);
-      [160, 345, 560, 1500, 1730, 1950, 2170, 2400, 2620, 2810].forEach(function (q) { put('curb', q, S.lamp); });
+      [160, 345, 560, 1500, 1730, 1950, 2170, 2400, 2620, 2810].forEach(function (q) { if (P === NIGHT) put('curb', q, S.glow, -23); put('curb', q, S.lamp); });
       put('curb', 1938, S.sSale); put('curb', 2694, S.mail);
       [10, 170, 380, 575, 1265, 1540, 1770, 1990, 2210, 2432, 2640, 2830].forEach(function (q) { put('fore', q, S.bush); });
       [-80, 90, 300, 520, 1350, 1600, 1850, 2080, 2300, 2520, 2700, 2920].forEach(function (q) { put('near', q, S.tuft); });
@@ -521,6 +539,7 @@
       for (i = 0; i < 70; i++) stars.push([sr(), sr(), sr() < .35]);
     }
 
+    var waiting = [];
     function build() {
       P = dark.matches ? NIGHT : DAY;
       S = {};
@@ -528,6 +547,48 @@
       buildWorld();
       built = true;
       dirty = true;
+      for (var i = 0; i < waiting.length; i++) waiting[i]();
+    }
+    function ready(fn) { waiting.push(fn); if (built) fn(); }
+
+    /* A small scene with one stop's building in it, for the cards in the page view. */
+    function art(id, w, h) {
+      var img = null, i;
+      for (i = 0; i < STOPS.length; i++) if (STOPS[i].id === id) img = S[STOPS[i].art];
+      if (!built || !img) return null;
+      return mk(w, h, function (g) {
+        var gy = h - 18, mid = w >> 1, u;
+        R(g, 0, 0, w, h, P.skyLow);
+        R(g, 0, 0, w, 6, P.skyTop); g.fillStyle = dith; g.fillRect(0, 6, w, 2);
+        if (P === NIGHT) for (u = 0; u < 26; u++) R(g, (stars[u][0] * w) | 0, (stars[u][1] * (gy - 40)) | 0, 1, 1, LIT);
+        g.drawImage(clouds[0].img, 10, 14); g.drawImage(clouds[3].img, w - 44, 24);
+        R(g, 0, gy, w, h - gy, P.grass);
+        for (u = 5; u < w; u += 13) R(g, u, gy + 2 + (u * 7) % 3, 2, 1, P.grassD);
+        R(g, mid - 58, gy, 116, 5, P.plaza);
+        for (u = mid - 58; u <= mid + 58; u += 14) R(g, u, gy, 1, 5, P.plazaD);
+        R(g, 0, gy + 5, w, 9, P.path); R(g, 0, gy + 5, w, 1, P.pathE); R(g, 0, gy + 13, w, 1, P.pathE);
+        for (u = 3; u < w; u += 16) R(g, u, gy + 6, 1, 7, P.pathD);
+        g.drawImage(S.treeA, mid - (img.width >> 1) - S.treeA.width + 6, gy - S.treeA.height);
+        g.drawImage(S.treeG, mid + (img.width >> 1) - 6, gy - S.treeG.height);
+        if (P === NIGHT) g.drawImage(S.glow, mid + (img.width >> 1) + 21, gy - 51);
+        g.drawImage(S.lamp, mid + (img.width >> 1) + 30, gy - 42);
+        g.drawImage(img, mid - (img.width >> 1), gy - img.height);
+        g.globalAlpha = .3; R(g, mid - 43, gy + 12, 10, 2, '#000'); g.globalAlpha = 1;
+        g.drawImage(S.idle, mid - 46, gy + 13 - 23);
+      });
+    }
+    /* A still frame of the real game, for the banner in the page view. */
+    function strip(c, sc) {
+      var cw = c.parentNode.clientWidth;
+      if (!built || !cw) return;
+      var keep = [ctx, W, H, cx, yh, roadY, x, dir, moving, bangUntil, targetStop];
+      W = Math.min(760, Math.ceil(cw / sc)); H = 104;
+      c.width = W; c.height = H;
+      c.style.width = W * sc + 'px'; c.style.height = H * sc + 'px';
+      ctx = c.getContext('2d'); cx = W >> 1; yh = 36; roadY = yh + K;
+      x = 1770; dir = 1; moving = false; bangUntil = 0; targetStop = -1;
+      draw(0);
+      ctx = keep[0]; W = keep[1]; H = keep[2]; cx = keep[3]; yh = keep[4]; roadY = keep[5]; x = keep[6]; dir = keep[7]; moving = keep[8]; bangUntil = keep[9]; targetStop = keep[10];
     }
 
     /* ---------- layout: how big one game pixel is, and where the road sits ---------- */
@@ -559,9 +620,10 @@
         if (it.f < lo || it.f >= hi) continue;
         var ix = Math.round(cx + (it.x - cam) * it.f - it.img.width / 2);
         if (ix > W || ix + it.img.width < 0) continue;
-        g.drawImage(it.img, ix, yh + it.b - it.img.height + it.oy);
+        g.drawImage(it.img === S.esa && flagB ? S.esa2 : it.img, ix, yh + it.b - it.img.height + it.oy);
       }
     }
+    var flagB = false;
     function shadow(g, x0, w) { g.globalAlpha = .3; R(g, x0, roadY - 1, w, 2, '#000'); g.globalAlpha = 1; }
     function draw(now) {
       var g = ctx, i, y, d, sc, c, px;
@@ -574,12 +636,20 @@
       var yb = yh - 46;
       R(g, 0, 0, W, yh + 2, P.skyLow);
       if (yb > 2) { R(g, 0, 0, W, yb - 2, P.skyTop); g.fillStyle = dith; g.fillRect(0, yb - 2, W, 2); }
-      if (P === NIGHT) for (i = 0; i < stars.length; i++) R(g, (stars[i][0] * W) | 0, (stars[i][1] * Math.max(8, yh - 26)) | 0, 1, 1, stars[i][2] ? '#7C7C7C' : LIT);
+      var tw = (t * 1.5) | 0;
+      flagB = ((t * 2.5) | 0) % 2 === 1;
+      if (P === NIGHT) for (i = 0; i < stars.length; i++) if ((i * 7 + tw) % 11) R(g, (stars[i][0] * W) | 0, (stars[i][1] * Math.max(8, yh - 26)) | 0, 1, 1, stars[i][2] ? '#7C7C7C' : LIT);
       g.drawImage(S.sun, W - 36, Math.max(6, Math.min(28, yh - 84)));
       for (i = 0; i < clouds.length; i++) {
         c = clouds[i];
         px = (((c.x + t * c.s - cam * .03) % (W + 90)) + W + 90) % (W + 90) - 60;
         g.drawImage(c.img, Math.round(px), Math.round(4 + c.y * Math.max(12, yh - 64)));
+      }
+
+      /* birds by day, in a loose line across the upper sky */
+      if (P !== NIGHT && yh > 58) for (i = 0; i < 3; i++) {
+        px = (((40 + i * 23 + t * (9 + i) - cam * .05) % (W + 80)) + W + 80) % (W + 80) - 40;
+        g.drawImage(((t * 4 + i) | 0) % 2 ? S.bird1 : S.bird2, Math.round(px), 14 + i * 6 + (((t * 1.3 + i) | 0) % 2));
       }
 
       /* ground, one screen row at a time */
@@ -595,6 +665,17 @@
       g.drawImage(skyS, cx - SPAD - Math.round(cam * .2), yh + 11 - skyS.height);
       drawItems(g, cam, 0, 1);
 
+      /* smoke from the chimney of the house, and an arrow over the building being walked to */
+      var bb = yh + Math.round(K * LANES.build), hx = Math.round(cx + (STOPS[0].x - cam) * LANES.build) + 20;
+      if (hx > -20 && hx < W + 20) for (i = 0; i < 3; i++) {
+        d = reduce ? i / 3 : (t * .45 + i / 3) % 1;
+        g.drawImage(d > .6 ? S.puffS : S.puff, hx - 3 + ((d * 8) | 0), bb - S.home.height - 4 - (((d * 11) | 0) * 2));
+      }
+      if (targetStop >= 0 && started) {
+        px = Math.round(cx + (STOPS[targetStop].x - cam) * LANES.build);
+        if (px > -8 && px < W + 8) g.drawImage(S.mark, px - 4, bb - S[STOPS[targetStop].art].height - 13 + (((t * 3) | 0) % 2) * 2);
+      }
+
       /* the plane waits on a runway, or carries the walker over the sea */
       var sx = Math.round(cx + (x - cam));
       if (x > FLY0 && x < FLY1) {
@@ -608,6 +689,7 @@
         var fr = moving ? ((walked / 9) | 0) % 2 ? 'w2' : 'w1' : 'idle';
         shadow(g, sx - 5, 10);
         g.drawImage(S[fr + (dir < 0 ? 'L' : '')], sx - 8, roadY - 23 - (fr === 'w2' ? 1 : 0));
+        if (fr === 'idle' && t % 3.4 > 3.25) R(g, sx - 8 + (dir < 0 ? 6 : 9), roadY - 18, 1, 1, P.skin);   /* blink */
         if (now < bangUntil) g.drawImage(S.bang, sx - 4, roadY - 38);
       }
 
@@ -830,7 +912,7 @@
       setTimeout(function () { if (!built) build(); }, 1500);
     } else build();
 
-    return { start: start, resume: resume, pause: pause, started: function () { return started; } };
+    return { start: start, resume: resume, pause: pause, started: function () { return started; }, ready: ready, art: art, strip: strip };
   })();
 
   /* =====================================================================
@@ -847,6 +929,27 @@
     box.addEventListener('click', fin);
     document.addEventListener('keydown', fin, { once: true });
   }
+
+  /* Pictures in the page view come from the game's own sprites, so they follow day and night too. */
+  var stripCv = document.getElementById('strip');
+  function paintPage() {
+    if (!Game || root.getAttribute('data-mode') !== 'page') return;
+    Array.prototype.forEach.call(document.querySelectorAll('.art'), function (box) {
+      var c = box.querySelector('canvas'), cw = box.clientWidth;
+      if (!c || !cw) return;
+      var sc = box.classList.contains('art-big') && cw >= 420 ? 3 : 2;
+      var h = sc === 3 ? 116 : 108, a = Game.art(box.getAttribute('data-art'), Math.ceil(cw / sc), h);
+      if (!a) return;
+      c.width = a.width; c.height = a.height;
+      c.style.width = a.width * sc + 'px'; c.style.height = a.height * sc + 'px';
+      box.style.height = a.height * sc + 'px';
+      c.getContext('2d').drawImage(a, 0, 0);
+    });
+    if (stripCv) Game.strip(stripCv, stripCv.parentNode.clientWidth >= 900 ? 3 : 2);
+  }
+  if (Game) Game.ready(paintPage); else document.documentElement.className += ' no-game';
+  var prz = 0;
+  window.addEventListener('resize', function () { cancelAnimationFrame(prz); prz = requestAnimationFrame(paintPage); });
 
   var menuBtn = document.querySelector('.menu-btn');
   var links = document.getElementById('nav-links');
@@ -896,12 +999,16 @@
     if (m === 'page') {
       if (Game) Game.pause();
       startIntro();
+      paintPage();
       if (!keepScroll) window.scrollTo(0, 0);
     } else Game.resume();
   }
   document.getElementById('to-page').addEventListener('click', function () { setMode('page'); });
   document.getElementById('g-skip').addEventListener('click', function () { setMode('page'); });
-  document.getElementById('to-game').addEventListener('click', function () { setMode(Game && Game.started() ? 'play' : 'title'); });
+  function toGame() { setMode(Game && Game.started() ? 'play' : 'title'); }
+  document.getElementById('to-game').addEventListener('click', toGame);
+  var sp = document.getElementById('strip-play');
+  if (sp) sp.addEventListener('click', toGame);
   if (!Game) document.getElementById('to-game').hidden = true;
   setMode(root.getAttribute('data-mode') === 'page' ? 'page' : 'title', true);
 })();
