@@ -1,11 +1,11 @@
-# lemonteaaaaa.github.io
+# FarozSyakir.github.io
 
 My personal portfolio, built as a small walk-through game. Press **Start** and a
 character walks from Jakarta to Nanjing and on to each project, or switch to
 **Page view** for a plain, scrollable version. One static site, no build step,
 no framework.
 
-**Live:** https://lemonteaaaaa.github.io
+**Live:** https://farozsyakir.github.io
 
 ## How it works
 - The scene is drawn on a `<canvas>` in a 2.5D perspective: the ground is a
