@@ -42,7 +42,7 @@
   </div>
 
   <div class="help">
-    <p>Click the game first, then play with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> to move and <kbd>Enter</kbd> to talk, choose and answer.</p>
+    <p>Click the game first, then move with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>. Walk up to a teacher or a chair and press <kbd>Enter</kbd> to talk or start a quiz. <kbd>Enter</kbd> also picks an answer.</p>
     <p class="note">Built from the original Java code and running in the browser with CheerpJ. The online leaderboard is turned off in this version. <a href="https://github.com/lemonteaaaaa/Final-Game-Hidayah" target="_blank" rel="noopener">View the code on GitHub</a>.</p>
   </div>
 </main>
@@ -72,7 +72,7 @@
       document.getElementById('cover').hidden = true;
       started = true;
       const base = location.pathname.replace(/[^/]*$/, '');
-      cheerpjRunJar('/app' + base + 'hidayah.jar');
+      cheerpjRunJar('/app' + base + 'hidayah-v2.jar');
       // scale once the game window is on screen
       for (let i = 0; i < 60 && !stage.querySelector('canvas'); i++) await new Promise(r => setTimeout(r, 500));
       await new Promise(r => setTimeout(r, 1500));
