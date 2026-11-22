@@ -72,7 +72,7 @@
       document.getElementById('cover').hidden = true;
       started = true;
       const base = location.pathname.replace(/[^/]*$/, '');
-      cheerpjRunJar('/app' + base + 'hidayah-v2.jar');
+      cheerpjRunJar('/app' + base + 'hidayah-v3.jar');
       // scale once the game window is on screen
       for (let i = 0; i < 60 && !stage.querySelector('canvas'); i++) await new Promise(r => setTimeout(r, 500));
       await new Promise(r => setTimeout(r, 1500));
