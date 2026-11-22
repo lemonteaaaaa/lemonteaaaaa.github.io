@@ -63,7 +63,10 @@
     try {
       await loadScript('https://cjrtnc.leaningtech.com/5.0/loader.js');
       await cheerpjInit();
+      // CheerpJ sizes its display from the element's on-screen box, so measure it unscaled, then scale
+      stage.style.transform = 'none';
       cheerpjCreateDisplay(1024, 768, stage);
+      fit();
       document.getElementById('cover').hidden = true;
       const base = location.pathname.replace(/[^/]*$/, '');
       await cheerpjRunJar('/app' + base + 'hidayah.jar');
