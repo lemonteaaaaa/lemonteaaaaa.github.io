@@ -51,7 +51,11 @@
   const screen = document.getElementById('screen');
   const stage = document.getElementById('stage');
   function fit() { stage.style.transform = 'scale(' + (screen.clientWidth / 1024) + ')'; }
-  fit(); addEventListener('resize', fit);
+  // CheerpJ reads the display size from its on-screen box, so it must see the full 1024x768 while it
+  // sets up (and after a resize); the scale-to-fit is applied a moment later.
+  let started = false, timer;
+  function refit() { stage.style.transform = 'none'; clearTimeout(timer); timer = setTimeout(fit, started ? 600 : 0); }
+  fit(); addEventListener('resize', refit);
 
   function loadScript(src) {
     return new Promise((ok, fail) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
@@ -63,13 +67,16 @@
     try {
       await loadScript('https://cjrtnc.leaningtech.com/5.0/loader.js');
       await cheerpjInit();
-      // CheerpJ sizes its display from the element's on-screen box, so measure it unscaled, then scale
       stage.style.transform = 'none';
       cheerpjCreateDisplay(1024, 768, stage);
-      fit();
       document.getElementById('cover').hidden = true;
+      started = true;
       const base = location.pathname.replace(/[^/]*$/, '');
-      await cheerpjRunJar('/app' + base + 'hidayah.jar');
+      cheerpjRunJar('/app' + base + 'hidayah.jar');
+      // scale once the game window is on screen
+      for (let i = 0; i < 60 && !stage.querySelector('canvas'); i++) await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 1500));
+      fit();
     } catch (err) {
       btn.disabled = false; btn.textContent = 'Try again';
       document.getElementById('cover').hidden = false;
