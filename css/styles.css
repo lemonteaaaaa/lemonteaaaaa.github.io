@@ -225,6 +225,8 @@
   .points li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; background: var(--win-ink); }
   .foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; }
   .foot .btn { margin-left: auto; }
+  .foot .btns { display: flex; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+  .foot .btns .btn { margin-left: 32px; }
   .stack { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
 
   .c-inv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 40px; }
